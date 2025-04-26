@@ -1,0 +1,90 @@
+/* Backgrounds for login and register */
+.login-bg {
+    background: linear-gradient(135deg, #ff6b6b, #f06543);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.register-bg {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Card */
+.auth-card {
+    background: white;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 350px;
+    position: relative;
+    animation: fadeIn 1.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Icon Circle */
+.icon-circle {
+    background: #f1c40f;
+    border-radius: 50%;
+    padding: 15px;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    margin-top: -70px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Form Inputs */
+.auth-card input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: #f0f0f0;
+}
+
+/* Buttons */
+.auth-card button {
+    width: 100%;
+    background-color: #3498db;
+    color: white;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.auth-card button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Switch Link */
+.switch-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #555;
+    text-decoration: none;
+    font-size: 14px;
+}
+.switch-link:hover {
+    color: #2980b9;
+}
