@@ -45,9 +45,9 @@ if (count($auctions) === 0) {
         $endTimestamp = strtotime($auction['AuctionEndTime']) * 1000;
         echo "<div class='grid-item'>
                 <img src='uploads/{$auction['ImageSourceURL']}' alt='{$auction['Title']}'>
-                <h3>{$auction['Title']}</h3>
-                <p>{$auction['Description']}</p>
-                <p><strong>Asking Price:</strong> {$auction['ApprovedPrice']}৳</p>
+                <h3>Requested Auction</h3>
+                <p>Artwork Title: <?php echo htmlspecialchars($artwork['Title']); ?></p>
+                <p>Asking Price: <?php echo htmlspecialchars($artwork['AskingPrice']); ?> Taka</p>
                 <p><strong>Current Highest Bid:</strong> {$auction['CurrentHighestBid']}৳</p>
                 <p><strong>Minimum Next Bid:</strong> {$minimumBid}৳</p>
                 <p><strong>Time Left:</strong> <span id='timer-{$auction['AuctionID']}'></span></p>";

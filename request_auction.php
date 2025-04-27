@@ -13,7 +13,7 @@ $art_id = $_GET['id'] ?? 0;
 
 $stmt = $pdo->prepare("SELECT * FROM Artwork WHERE ArtworkID = ? AND UserID = ?");
 $stmt->execute([$art_id, $user_id]);
-$artwork = $stmt->fetch();
+    $artwork = $stmt->fetch();
 
 if (!$artwork) {
     echo "❌ Access Denied.";
@@ -28,12 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare("INSERT INTO Auction (ArtworkID, StartPrice, CurrentHighestBid, Status) VALUES (?, ?, 0, 'Pending')");
         $stmt->execute([$artwork_id, $start_price]);
         header("Location: dashboard.php?auction_requested=1");
-        exit();
-    } else {
+                    exit();
+                } else {
         $error = "Invalid Starting Price.";
-    }
-}
-?>
+                }
+            }
+            ?>
 
 <h2>🎯 Request Auction for <?= htmlspecialchars($artwork['Title']) ?></h2>
 
@@ -42,5 +42,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <form method="POST">
     <label>Set Your Starting Price (Minimum Bid Price)</label><br><br>
     <input type="number" name="start_price" step="0.01" required><br><br>
-    <button type="submit">Submit Auction Request</button>
-</form>
+                <button type="submit">Submit Auction Request</button>
+            </form>
