@@ -11,7 +11,7 @@ $user_id = $_SESSION['user']['UserID'];
 $success_message = '';
 $error_message = '';
 
-// Handle Upload Form Submission
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_artwork'])) {
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upload_artwork'])) {
     }
 }
 
-// Fetch Wallet Balance
+
 $stmt = $pdo->prepare("SELECT WalletBalance FROM User WHERE UserID = ?");
 $stmt->execute([$user_id]);
 $balance = $stmt->fetchColumn();
@@ -111,7 +111,7 @@ $balance = $stmt->fetchColumn();
 
 <div class="dashboard-layout">
 
-    <!-- LEFT: Your Artworks -->
+
     <div class="left-side">
         <h2>🎨 Your Artworks</h2>
 
@@ -150,7 +150,7 @@ $balance = $stmt->fetchColumn();
         </div>
     </div>
 
-    <!-- RIGHT: Upload New Artwork -->
+
     <div class="right-side">
         <h3>➕ Upload New Artwork</h3>
         <form method="POST" enctype="multipart/form-data">

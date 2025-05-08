@@ -1,6 +1,8 @@
 <?php
 session_start();
 include 'config.php';
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
@@ -9,13 +11,14 @@ include 'config.php';
     <meta charset="UTF-8">
     <title>Auction Market</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="popup.js"></script> <!-- Real-time Popup Script -->
+    <script src="popup.js"></script> 
 </head>
 <body>
 
 <?php include 'includes/header.php'; ?>
 
 <?php
+
 if (isset($_GET['bid_success'])) echo "<p style='color:green;'>✅ Bid placed successfully!</p>";
 if (isset($_GET['buy_success'])) echo "<p style='color:green;'>✅ Artwork bought successfully!</p>";
 ?>
@@ -24,34 +27,46 @@ if (isset($_GET['buy_success'])) echo "<p style='color:green;'>✅ Artwork bough
 
 <div class="grid-container">
 <?php
+
 $stmt = $pdo->prepare("
-    SELECT Auction.*, Artwork.Title, Artwork.Description, Artwork.ImageSourceURL, Artwork.ApprovedPrice, Artwork.UserID AS OwnerID, Artwork.AuctionEndTime
-    FROM Auction
-    JOIN Artwork ON Auction.ArtworkID = Artwork.ArtworkID
-    WHERE Auction.Status = 'Live' AND Artwork.AuctionEndTime > NOW()
+    SELECT a.AuctionID, a.StartDateTime, a.EndDateTime, a.StartPrice, a.ReservePrice, a.CurrentHighestBid, a.Status, 
+           art.Title, art.Description, art.ImageSourceURL, art.ApprovedPrice, art.UserID AS OwnerID, art.AuctionEndTime
+    FROM Auction a
+    JOIN Artwork art ON a.ArtworkID = art.ArtworkID
+    WHERE a.Status = 'Live' AND art.AuctionEndTime > NOW() OR (a.Status = 'Expired' AND a.CurrentHighestBid = 0)
 ");
+
 $stmt->execute();
 $auctions = $stmt->fetchAll();
+
 
 if (count($auctions) === 0) {
     echo "<p>No live auctions currently.</p>";
 } else {
+
     foreach ($auctions as $auction) {
+
+        if (!empty($auction['AuctionEndTime'])) {
+            $endTimestamp = strtotime($auction['AuctionEndTime']) * 1000;
+        } else {
+            $endTimestamp = 0;  
+        }
+
         $buyNowPrice = round($auction['ApprovedPrice'] * 1.15, 2);
         $minimumBid = ($auction['CurrentHighestBid'] == 0) 
             ? round($auction['ApprovedPrice'] * 0.2, 2)
             : round($auction['CurrentHighestBid'] * 1.2, 2);
 
-        $endTimestamp = strtotime($auction['AuctionEndTime']) * 1000;
         echo "<div class='grid-item'>
                 <img src='uploads/{$auction['ImageSourceURL']}' alt='{$auction['Title']}'>
                 <h3>Requested Auction</h3>
-                <p>Artwork Title: <?php echo htmlspecialchars($artwork['Title']); ?></p>
-                <p>Asking Price: <?php echo htmlspecialchars($artwork['AskingPrice']); ?> Taka</p>
-                <p><strong>Current Highest Bid:</strong> {$auction['CurrentHighestBid']}৳</p>
+                <p>Artwork Title: {$auction['Title']}</p>
+                <p>Description: {$auction['Description']}</p>
+                <p>Current Highest Bid: {$auction['CurrentHighestBid']}৳</p>
                 <p><strong>Minimum Next Bid:</strong> {$minimumBid}৳</p>
                 <p><strong>Time Left:</strong> <span id='timer-{$auction['AuctionID']}'></span></p>";
 
+        
         if (isset($_SESSION['user']) && $_SESSION['user']['UserID'] !== $auction['OwnerID']) {
             echo "<form action='place_bid.php' method='POST'>
                     <input type='hidden' name='auction_id' value='{$auction['AuctionID']}'>
@@ -69,7 +84,9 @@ if (count($auctions) === 0) {
             echo "<p><em>You cannot bid on your own artwork.</em></p>";
         }
 
+
         echo "</div>";
+
 
         echo "
         <script>
