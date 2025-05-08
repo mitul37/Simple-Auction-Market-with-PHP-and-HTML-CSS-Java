@@ -47,7 +47,7 @@ This is a **Full-stack PHP-based Online Art Auction Platform** where users can:
 1. **Clone or Download the Repository**:
 
    ```bash
-   git clone https://github.com/yourusername/online-art-auction.git
+   git clone https://github.com/mitul37/Simple-Auction-Market-with-PHP-and-HTML-CSS-Java.git
    ```
 
 2. **Set up your Local Development Environment**:
