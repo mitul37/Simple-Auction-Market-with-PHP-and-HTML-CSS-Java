@@ -10,30 +10,36 @@ if (!isset($_SESSION['user'])) {
 $user_id = $_SESSION['user']['UserID'];
 $art_id = $_GET['id'] ?? 0;
 
-
 $stmt = $pdo->prepare("SELECT * FROM Artwork WHERE ArtworkID = ? AND UserID = ?");
 $stmt->execute([$art_id, $user_id]);
-    $artwork = $stmt->fetch();
+$artwork = $stmt->fetch();
 
 if (!$artwork) {
     echo "❌ Access Denied.";
     exit();
 }
 
+$error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $start_price = (float)$_POST['start_price'];
 
     if ($start_price > 0) {
-        $stmt = $pdo->prepare("INSERT INTO Auction (ArtworkID, StartPrice, CurrentHighestBid, Status) VALUES (?, ?, 0, 'Pending')");
-        $stmt->execute([$artwork_id, $start_price]);
+        // Define auction start and end time (e.g., 7 days auction)
+        $startDateTime = date('Y-m-d H:i:s');
+        $endDateTime = date('Y-m-d H:i:s', strtotime('+7 days'));
+
+        // Insert auction with the correct artwork ID ($art_id)
+        $stmt = $pdo->prepare("INSERT INTO Auction (ArtworkID, StartDateTime, EndDateTime, StartPrice, CurrentHighestBid, Status) VALUES (?, ?, ?, ?, 0, 'Live')");
+        $stmt->execute([$art_id, $startDateTime, $endDateTime, $start_price]);
+
         header("Location: dashboard.php?auction_requested=1");
-                    exit();
-                } else {
+        exit();
+    } else {
         $error = "Invalid Starting Price.";
-                }
-            }
-            ?>
+    }
+}
+?>
 
 <h2>🎯 Request Auction for <?= htmlspecialchars($artwork['Title']) ?></h2>
 
@@ -41,6 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <form method="POST">
     <label>Set Your Starting Price (Minimum Bid Price)</label><br><br>
-    <input type="number" name="start_price" step="0.01" required><br><br>
-                <button type="submit">Submit Auction Request</button>
-            </form>
+    <input type="number" name="start_price" step="0.01" min="0.01" required><br><br>
+    <button type="submit">Submit Auction Request</button>
+</form>
